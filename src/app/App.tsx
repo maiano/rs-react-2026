@@ -36,8 +36,6 @@ export class App extends React.Component<Props, State> {
     });
 
     try {
-      await new Promise((r) => setTimeout(r, 200));
-
       const data = await fetchPeople(term);
 
       if (currentRequest !== this.requestId) return;
@@ -66,7 +64,7 @@ export class App extends React.Component<Props, State> {
     return (
       <div className="app-container py-8 space-y-6">
         <div className="p-4 border rounded-lg bg-card">
-          <SearchBar onSearch={this.handleSearch} />
+          <SearchBar onSearch={this.handleSearch} loading={loading} />
         </div>
 
         <div className="p-4 border rounded-lg bg-card min-h-75">
@@ -78,7 +76,7 @@ export class App extends React.Component<Props, State> {
 
           <div className="mt-4 flex justify-end">
             <Button
-              variant="ghost"
+              variant="secondary"
               size="sm"
               onClick={this.throwError}
               className="text-destructive hover:text-destructive"

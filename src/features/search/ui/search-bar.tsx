@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, Input } from '@/shared/ui';
+import { Button, Input, Spinner } from '@/shared/ui';
 
 type Props = {
   onSearch: (term: string) => void;
+  loading?: boolean;
 };
 
 type State = {
@@ -60,6 +61,7 @@ export class SearchBar extends React.Component<Props, State> {
 
   render() {
     const { value } = this.state;
+    const { loading = false } = this.props;
 
     return (
       <div className="flex items-center gap-3">
@@ -70,7 +72,19 @@ export class SearchBar extends React.Component<Props, State> {
           placeholder="Search characters..."
         />
 
-        <Button onClick={this.handleSearch}>Search</Button>
+        <Button
+          onClick={this.handleSearch}
+          loading={loading}
+          className="min-w-36"
+          render={({ loading: isLoading }) => (
+            <>
+              {isLoading && <Spinner size="sm" variant="inverted" />}
+              <span>{isLoading ? 'Searching...' : 'Search'}</span>
+            </>
+          )}
+        >
+          Search
+        </Button>
       </div>
     );
   }
