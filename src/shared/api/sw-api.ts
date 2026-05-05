@@ -11,10 +11,10 @@ type ApiResponse = {
   results: Person[];
 };
 
-const BASE_URL = '/api/v1';
+const BASE_URL = 'https://sw-next-api.vercel.app/api/v1';
 
 export async function fetchPeople(search: string): Promise<Person[]> {
-  const url = new URL(`${BASE_URL}/people`, window.location.origin);
+  const url = new URL(`${BASE_URL}/people`);
 
   if (search) {
     url.searchParams.set('search', search);
