@@ -2,6 +2,7 @@ import React from 'react';
 import { SearchBar } from '@/features/search';
 import { CharacterList } from '@/widgets/character-list/ui/character-list';
 import { fetchPeople, type Person } from '@/shared/api/sw-api';
+import { Button } from '@/shared/ui';
 
 type Props = object;
 
@@ -9,6 +10,7 @@ type State = {
   items: Person[];
   loading: boolean;
   error: string | null;
+  shouldThrowError: boolean;
 };
 
 export class App extends React.Component<Props, State> {
@@ -16,9 +18,14 @@ export class App extends React.Component<Props, State> {
     items: [],
     loading: false,
     error: null,
+    shouldThrowError: false,
   };
 
   private requestId = 0;
+
+  throwError = () => {
+    this.setState({ shouldThrowError: true });
+  };
 
   handleSearch = async (term: string) => {
     const currentRequest = ++this.requestId;
@@ -50,7 +57,11 @@ export class App extends React.Component<Props, State> {
   };
 
   render() {
-    const { items, loading, error } = this.state;
+    const { items, loading, error, shouldThrowError } = this.state;
+
+    if (shouldThrowError) {
+      throw new Error('Test error');
+    }
 
     return (
       <div className="app-container py-8 space-y-6">
@@ -64,6 +75,17 @@ export class App extends React.Component<Props, State> {
           {!loading && error && <div className="text-destructive">{error}</div>}
 
           {!loading && !error && <CharacterList items={items} />}
+
+          <div className="mt-4 flex justify-end">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={this.throwError}
+              className="text-destructive hover:text-destructive"
+            >
+              Trigger Error
+            </Button>
+          </div>
         </div>
       </div>
     );
