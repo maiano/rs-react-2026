@@ -127,9 +127,25 @@
    BASE STYLES
 ========================= */
 @layer base {
+  * {
+    border-color: var(--border);
+    outline-color: var(--ring);
+  }
+
+  html {
+    min-width: 320px;
+    background: var(--background);
+  }
+
   body {
+    min-width: 320px;
+    min-height: 100vh;
     font-family: var(--font-sans);
-    @apply bg-background text-foreground antialiased;
+    line-height: 1.5;
+    background:
+      radial-gradient(circle at top left, oklch(0.78 0.17 65 / 0.12), transparent 32rem),
+      var(--background);
+    @apply text-foreground antialiased;
   }
 
   h1,
