@@ -1,6 +1,6 @@
 import React from 'react';
 import { SearchBar } from '@/features/search';
-import { CharacterList } from '@/widgets/character-list/ui/character-list';
+import { CharacterList } from '@/widgets/character-list';
 import { fetchPeople, type Person } from '@/shared/api/sw-api';
 import { Button } from '@/shared/ui';
 
