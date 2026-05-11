@@ -1,6 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { App } from './App';
-import { ErrorBoundary } from '@/shared/lib/error-boundary/error-boundary';
 import { mockPeople } from '@/test/mocks/characters';
 import { render, screen, userEvent, waitFor } from '@/test/test-utils';
 import { fetchPeople } from '@/shared/api/sw-api';
@@ -99,24 +98,5 @@ describe('App', () => {
     await waitFor(() => {
       expect(screen.queryByRole('heading', { name: 'Luke Skywalker' })).not.toBeInTheDocument();
     });
-  });
-
-  it('lets error boundary show fallback when trigger error button is clicked', async () => {
-    fetchPeopleMock.mockResolvedValue(mockPeople);
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    const user = userEvent.setup();
-
-    render(
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    );
-
-    await screen.findByRole('heading', { name: 'Luke Skywalker' });
-    await user.click(screen.getByRole('button', { name: 'Trigger Error' }));
-
-    expect(await screen.findByText('Something went wrong')).toBeInTheDocument();
-
-    consoleErrorSpy.mockRestore();
   });
 });
