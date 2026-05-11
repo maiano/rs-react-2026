@@ -4,6 +4,10 @@ This is a React + TypeScript app. It lets you search Star Wars characters, keeps
 
 The project is implemented with class components to match the task requirements.
 
+## Live Demo
+
+https://sw-maiano.netlify.app/
+
 ## Getting Started
 
 Clone the repository and switch to the working branch:
@@ -33,6 +37,18 @@ http://localhost:5173
 ```
 
 ## Checks
+
+Run tests:
+
+```bash
+npm run test
+```
+
+Run coverage:
+
+```bash
+npm run test:coverage
+```
 
 Run ESLint:
 
