@@ -18,10 +18,10 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const base =
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 disabled:pointer-events-none [&>svg]:shrink-0 [&>svg]:pointer-events-none';
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 disabled:pointer-events-none [&>svg]:shrink-0 [&>svg]:pointer-events-none';
 
 const variants: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-primary-foreground hover:bg-[var(--primary-hover)] shadow-md',
+  primary: 'bg-primary text-primary-foreground hover:bg-[var(--primary-hover)] hover:shadow-sm',
   secondary: 'bg-secondary text-secondary-foreground hover:bg-muted',
   ghost: 'bg-transparent hover:bg-muted text-foreground',
   destructive: 'bg-destructive text-destructive-foreground hover:opacity-90',

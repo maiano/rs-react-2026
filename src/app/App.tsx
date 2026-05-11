@@ -62,30 +62,32 @@ export class App extends React.Component<Props, State> {
     }
 
     return (
-      <div className="app-container py-8 space-y-6">
-        <div className="p-4 border rounded-lg bg-card">
-          <SearchBar onSearch={this.handleSearch} loading={loading} />
-        </div>
+      <main className="min-h-screen bg-background">
+        <div className="app-container py-6 space-y-6">
+          <div className="p-4 border rounded-xl bg-card">
+            <SearchBar onSearch={this.handleSearch} loading={loading} />
+          </div>
 
-        <div className="p-4 border rounded-lg bg-card min-h-75">
-          {loading && <div className="text-muted-foreground">Loading...</div>}
+          <div className="p-4 border rounded-xl bg-card min-h-75">
+            {loading && <div className="text-muted-foreground">Loading...</div>}
 
-          {!loading && error && <div className="text-destructive">{error}</div>}
+            {!loading && error && <div className="text-destructive">{error}</div>}
 
-          {!loading && !error && <CharacterList items={items} />}
+            {!loading && !error && <CharacterList items={items} />}
 
-          <div className="mt-4 flex justify-end">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={this.throwError}
-              className="text-destructive hover:text-destructive"
-            >
-              Trigger Error
-            </Button>
+            <div className="mt-4 flex justify-end">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={this.throwError}
+                className="text-destructive hover:text-destructive"
+              >
+                Trigger Error
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 }

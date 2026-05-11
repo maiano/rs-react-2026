@@ -10,8 +10,7 @@ export class Card extends React.Component<CardProps> {
     return (
       <div
         className={cn(
-          'rounded-lg border border-border bg-card text-card-foreground p-4 shadow-sm transition hover:shadow-md',
-          'animate-fade-in',
+          'animate-fade-in rounded-xl border border-border/80 bg-card text-card-foreground shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md',
           className
         )}
         {...props}
