@@ -1,5 +1,6 @@
 import { Card } from '@/shared/ui';
 import type { Person } from '@/shared/api/sw-api';
+import { formatBirthYear } from '@/shared/lib/format/format-birth-year';
 
 type Props = {
   person: Person;
@@ -32,13 +33,15 @@ export const CharacterCard = ({ person }: Props) => {
 
         <div className="flex items-center justify-between gap-4 border-t border-border pt-3">
           <dt className="text-muted-foreground">Birth year</dt>
-          <dd className="font-medium text-card-foreground">{person.birthYearBBY ?? 'unknown'}</dd>
+          <dd className="font-medium text-card-foreground">
+            {formatBirthYear(person.birthYearBBY)}
+          </dd>
         </div>
 
         <div className="flex items-center justify-between gap-4 border-t border-border pt-3">
           <dt className="text-muted-foreground">Homeworld</dt>
           <dd className="font-medium text-card-foreground">
-            {person.homeworld?.name ?? 'unknown'}
+            {person.homeworld?.name ?? 'Unknown'}
           </dd>
         </div>
       </dl>
