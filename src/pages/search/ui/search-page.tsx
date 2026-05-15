@@ -1,34 +1,61 @@
+import { useRef, useState } from 'react';
 import { Outlet } from 'react-router';
-import { Card } from '@/shared/ui';
 import { SearchBar } from '@/features/search';
+import { CharacterList } from '@/widgets/character-list';
+import { fetchPeople, type Person } from '@/shared/api/sw-api';
 
 export function SearchPage() {
+  const [items, setItems] = useState<Person[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const requestIdRef = useRef(0);
+
+  const handleSearch = async (term: string) => {
+    const currentRequest = ++requestIdRef.current;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await fetchPeople(term);
+
+      if (currentRequest !== requestIdRef.current) return;
+
+      setItems(data);
+      setLoading(false);
+    } catch (err) {
+      if (currentRequest !== requestIdRef.current) return;
+
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-background">
       <div className="app-container py-6 space-y-6">
-        <section className="space-y-2">
-          <p className="text-xs font-medium uppercase text-muted-foreground">Star Wars Database</p>
+        <section className="rounded-2xl border border-border bg-card shadow-sm p-6">
+          <div className="mb-4">
+            <p className="text-xs font-medium uppercase text-muted-foreground">
+              Star Wars Database
+            </p>
 
-          <h1 className="text-heading text-foreground">Character Search</h1>
+            <h1 className="text-subheading text-foreground">Find characters across the galaxy</h1>
+          </div>
+          <SearchBar onSearch={handleSearch} loading={loading} />
         </section>
 
-        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px] xl:items-start">
-          <div className="space-y-6">
-            <Card className="p-4">
-              <SearchBar onSearch={() => {}} />
-            </Card>
+        <section className="rounded-2xl border border-border bg-card shadow-sm p-6">
+          <div>
+            {loading && <div className="text-muted-foreground">Loading...</div>}
 
-            <Card className="p-6">
-              <h2 className="text-subheading font-heading text-card-foreground">Results Area</h2>
+            {!loading && error && <div className="text-destructive">{error}</div>}
 
-              <p className="mt-3 text-body-sm text-muted-foreground">
-                This page now owns the main search route.
-              </p>
-            </Card>
+            {!loading && !error && <CharacterList items={items} />}
           </div>
 
           <Outlet />
-        </div>
+        </section>
       </div>
     </main>
   );
