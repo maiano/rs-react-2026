@@ -1,91 +1,69 @@
-import React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Input, Spinner } from '@/shared/ui';
+import { useLocalStorage } from '@/shared/lib/hooks/use-local-storage';
 
 type Props = {
   onSearch: (term: string) => void;
   loading?: boolean;
 };
 
-type State = {
-  value: string;
-  lastSubmitted: string;
-};
-
 const STORAGE_KEY = 'sw-search';
 
-export class SearchBar extends React.Component<Props, State> {
-  state: State = {
-    value: '',
-    lastSubmitted: '',
+export function SearchBar({ onSearch, loading = false }: Props) {
+  const [lastSubmitted, setLastSubmitted] = useLocalStorage(STORAGE_KEY, '');
+  const [value, setValue] = useState('');
+  const initialSearchSentRef = useRef(false);
+
+  useEffect(() => {
+    if (initialSearchSentRef.current) return;
+
+    setValue(lastSubmitted);
+    onSearch(lastSubmitted);
+    initialSearchSentRef.current = true;
+  }, [lastSubmitted, onSearch]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
   };
 
-  componentDidMount() {
-    const saved = localStorage.getItem(STORAGE_KEY);
+  const handleSearch = () => {
+    const trimmed = value.trim();
 
-    if (saved) {
-      this.setState({
-        value: saved,
-        lastSubmitted: saved,
-      });
+    if (trimmed === lastSubmitted) return;
 
-      this.props.onSearch(saved);
-    } else {
-      this.props.onSearch('');
-    }
-  }
-
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ value: e.target.value });
+    setLastSubmitted(trimmed);
+    setValue(trimmed);
+    onSearch(trimmed);
   };
 
-  handleSearch = () => {
-    const trimmed = this.state.value.trim();
-
-    if (trimmed === this.state.lastSubmitted) return;
-
-    localStorage.setItem(STORAGE_KEY, trimmed);
-
-    this.setState({
-      lastSubmitted: trimmed,
-      value: trimmed,
-    });
-
-    this.props.onSearch(trimmed);
-  };
-
-  handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      this.handleSearch();
+      handleSearch();
     }
   };
 
-  render() {
-    const { value } = this.state;
-    const { loading = false } = this.props;
+  return (
+    <div className="flex items-center gap-3">
+      <Input
+        value={value}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        placeholder="Search characters..."
+      />
 
-    return (
-      <div className="flex items-center gap-3">
-        <Input
-          value={value}
-          onChange={this.handleChange}
-          onKeyDown={this.handleKeyDown}
-          placeholder="Search characters..."
-        />
-
-        <Button
-          onClick={this.handleSearch}
-          loading={loading}
-          className="min-w-36"
-          render={({ loading: isLoading }) => (
-            <>
-              {isLoading && <Spinner size="sm" variant="inverted" />}
-              <span>{isLoading ? 'Searching...' : 'Search'}</span>
-            </>
-          )}
-        >
-          Search
-        </Button>
-      </div>
-    );
-  }
+      <Button
+        onClick={handleSearch}
+        loading={loading}
+        className="min-w-36"
+        render={({ loading: isLoading }) => (
+          <>
+            {isLoading && <Spinner size="sm" variant="inverted" />}
+            <span>{isLoading ? 'Searching...' : 'Search'}</span>
+          </>
+        )}
+      >
+        Search
+      </Button>
+    </div>
+  );
 }
