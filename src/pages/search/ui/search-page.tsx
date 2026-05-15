@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { Outlet } from 'react-router';
+import { Card } from '@/shared/ui';
 import { SearchBar } from '@/features/search';
 import { CharacterList } from '@/widgets/character-list';
 import { fetchPeople, type Person } from '@/shared/api/sw-api';
@@ -34,7 +35,7 @@ export function SearchPage() {
   return (
     <main className="min-h-screen bg-background">
       <div className="app-container py-6 space-y-6">
-        <section className="rounded-2xl border border-border bg-card shadow-sm p-6">
+        <Card className="p-6">
           <div className="mb-4">
             <p className="text-xs font-medium uppercase text-muted-foreground">
               Star Wars Database
@@ -43,9 +44,9 @@ export function SearchPage() {
             <h1 className="text-subheading text-foreground">Find characters across the galaxy</h1>
           </div>
           <SearchBar onSearch={handleSearch} loading={loading} />
-        </section>
+        </Card>
 
-        <section className="rounded-2xl border border-border bg-card shadow-sm p-6">
+        <Card className="p-6">
           <div>
             {loading && <div className="text-muted-foreground">Loading...</div>}
 
@@ -55,7 +56,7 @@ export function SearchPage() {
           </div>
 
           <Outlet />
-        </section>
+        </Card>
       </div>
     </main>
   );

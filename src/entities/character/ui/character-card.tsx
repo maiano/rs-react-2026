@@ -8,7 +8,7 @@ type Props = {
 
 export const CharacterCard = ({ person }: Props) => {
   return (
-    <Card className="group space-y-4 p-5">
+    <Card className="group space-y-4 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
