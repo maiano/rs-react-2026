@@ -83,9 +83,69 @@ export function CharacterDetailsPanel() {
             </dl>
 
             <div className="space-y-3 border-t border-border pt-4 text-sm">
+              <p className="text-muted-foreground">Alignment</p>
+              <dl className="grid gap-3">
+                <div className="flex items-center justify-between gap-4">
+                  <dt className="text-muted-foreground">Force user</dt>
+                  <dd className="font-medium text-card-foreground">
+                    {item.meta?.isForceUser ? 'Yes' : 'No'}
+                  </dd>
+                </div>
+
+                <div className="flex items-center justify-between gap-4">
+                  <dt className="text-muted-foreground">Jedi</dt>
+                  <dd className="font-medium text-card-foreground">
+                    {item.meta?.isJedi ? 'Yes' : 'No'}
+                  </dd>
+                </div>
+
+                <div className="flex items-center justify-between gap-4">
+                  <dt className="text-muted-foreground">Sith</dt>
+                  <dd className="font-medium text-card-foreground">
+                    {item.meta?.isSith ? 'Yes' : 'No'}
+                  </dd>
+                </div>
+
+                <div className="flex items-center justify-between gap-4">
+                  <dt className="text-muted-foreground">Faction</dt>
+                  <dd className="font-medium capitalize text-card-foreground">
+                    {item.meta?.faction ?? 'Unknown'}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            <div className="space-y-3 border-t border-border pt-4 text-sm">
               <p className="text-muted-foreground">Films</p>
               <p className="font-medium text-card-foreground">
                 {item.films.length ? item.films.map((film) => film.title).join(', ') : 'Unknown'}
+              </p>
+            </div>
+
+            <div className="space-y-3 border-t border-border pt-4 text-sm">
+              <p className="text-muted-foreground">Species</p>
+              <p className="font-medium text-card-foreground">
+                {item.species.length
+                  ? item.species.map((species) => species.name).join(', ')
+                  : 'Unknown'}
+              </p>
+            </div>
+
+            <div className="space-y-3 border-t border-border pt-4 text-sm">
+              <p className="text-muted-foreground">Vehicles</p>
+              <p className="font-medium text-card-foreground">
+                {item.vehicles.length
+                  ? item.vehicles.map((vehicle) => vehicle.name).join(', ')
+                  : 'Unknown'}
+              </p>
+            </div>
+
+            <div className="space-y-3 border-t border-border pt-4 text-sm">
+              <p className="text-muted-foreground">Starships</p>
+              <p className="font-medium text-card-foreground">
+                {item.starships.length
+                  ? item.starships.map((starship) => starship.name).join(', ')
+                  : 'Unknown'}
               </p>
             </div>
           </div>

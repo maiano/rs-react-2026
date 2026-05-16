@@ -51,6 +51,20 @@ export const CharacterCard = ({ person, isActive = false }: Props) => {
             {person.homeworld?.name ?? 'Unknown'}
           </dd>
         </div>
+
+        <div className="flex items-center justify-between gap-4 border-t border-border pt-3">
+          <dt className="text-muted-foreground">Force user</dt>
+          <dd className="font-medium text-card-foreground">
+            {person.meta?.isForceUser ? 'Yes' : 'No'}
+          </dd>
+        </div>
+
+        <div className="flex items-center justify-between gap-4 border-t border-border pt-3">
+          <dt className="text-muted-foreground">Faction</dt>
+          <dd className="font-medium capitalize text-card-foreground">
+            {person.meta?.faction ?? 'Unknown'}
+          </dd>
+        </div>
       </dl>
     </Card>
   );

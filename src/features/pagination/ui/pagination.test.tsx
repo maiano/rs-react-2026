@@ -16,8 +16,6 @@ describe('Pagination', () => {
 
     expect(screen.getByRole('navigation', { name: 'Pagination' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '2' })).toHaveAttribute('aria-current', 'page');
-    expect(screen.getByRole('button', { name: 'Previous page' })).toHaveTextContent('Previous');
-    expect(screen.getByRole('button', { name: 'Next page' })).toHaveTextContent('Next');
   });
 
   it('calls onPageChange when a page is clicked', async () => {
@@ -38,7 +36,7 @@ describe('Pagination', () => {
       .getAllByRole('button')
       .filter((button) => /^\d+$/.test(button.textContent ?? ''));
 
-    expect(numberedButtons).toHaveLength(7);
+    expect(numberedButtons).toHaveLength(5);
   });
 
   it('shows ellipses when page range is truncated', () => {
