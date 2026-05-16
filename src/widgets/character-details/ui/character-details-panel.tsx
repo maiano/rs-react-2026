@@ -15,9 +15,7 @@ export function CharacterDetailsPanel() {
       <Card className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-              Details
-            </p>
+            <p className="text-xs font-medium uppercase text-muted-foreground">Details</p>
 
             <h2 className="mt-2 text-subheading font-heading text-card-foreground">
               Character #{detailsId}

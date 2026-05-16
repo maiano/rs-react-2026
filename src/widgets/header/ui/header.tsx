@@ -7,6 +7,9 @@ const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
     isActive ? 'text-primary' : 'text-foreground hover:bg-muted'
   );
 
+const externalLinkClassName =
+  'rounded-xl px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted';
+
 export function Header() {
   return (
     <header className="border-b border-border/80 bg-card/80 backdrop-blur-sm">
@@ -26,6 +29,15 @@ export function Header() {
           <NavLink to="/about" className={navLinkClassName}>
             About
           </NavLink>
+
+          <a
+            href="https://sw-next-api.vercel.app/"
+            target="_blank"
+            rel="noreferrer"
+            className={externalLinkClassName}
+          >
+            Star Wars API
+          </a>
         </nav>
       </div>
     </header>

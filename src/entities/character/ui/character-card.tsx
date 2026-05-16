@@ -18,9 +18,7 @@ export const CharacterCard = ({ person, isActive = false }: Props) => {
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-            Character
-          </p>
+          <p className="text-xs font-medium uppercase text-muted-foreground">Character</p>
 
           <h3 className="mt-2 text-xl font-semibold tracking-tight text-card-foreground">
             {person.name}

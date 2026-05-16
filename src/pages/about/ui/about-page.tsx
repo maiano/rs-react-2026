@@ -17,7 +17,7 @@ export function AboutPage() {
             href="https://rs.school/courses/reactjs"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-all duration-200 hover:bg-primary-hover hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            className="text-sm font-medium text-primary transition-colors hover:text-[var(--primary-hover)] focus:outline-none focus:ring-2 focus:ring-ring/15"
           >
             RS School React Course
           </a>
