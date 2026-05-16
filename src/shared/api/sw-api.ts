@@ -16,6 +16,7 @@ export type PeopleResponse = {
 };
 
 const BASE_URL = 'https://sw-next-api.vercel.app/api/v1';
+const PEOPLE_PAGE_LIMIT = 12;
 
 export async function fetchPeople(search: string, page = 1): Promise<PeopleResponse> {
   const url = new URL(`${BASE_URL}/people`);
@@ -25,7 +26,7 @@ export async function fetchPeople(search: string, page = 1): Promise<PeopleRespo
   }
 
   url.searchParams.set('page', String(page));
-  url.searchParams.set('limit', '12');
+  url.searchParams.set('limit', String(PEOPLE_PAGE_LIMIT));
 
   const res = await fetch(url.toString());
 

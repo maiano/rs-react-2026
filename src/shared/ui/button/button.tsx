@@ -22,8 +22,10 @@ const base =
 
 const variants: Record<ButtonVariant, string> = {
   primary: 'bg-primary text-primary-foreground hover:bg-[var(--primary-hover)] hover:shadow-sm',
-  secondary: 'border border-border bg-secondary text-secondary-foreground shadow-sm hover:bg-muted',
-  ghost: 'bg-transparent text-foreground hover:bg-muted hover:text-foreground',
+  secondary:
+    'border border-border bg-secondary text-secondary-foreground shadow-sm hover:border-primary/35 hover:bg-[color-mix(in_oklch,var(--secondary)_72%,var(--primary)_28%)] hover:text-foreground hover:shadow-sm',
+  ghost:
+    'bg-transparent text-foreground hover:bg-[color-mix(in_oklch,var(--muted)_62%,var(--primary)_38%)] hover:text-foreground',
   destructive: 'bg-destructive text-destructive-foreground hover:opacity-90',
 };
 
