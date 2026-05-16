@@ -1,14 +1,21 @@
 import { Card } from '@/shared/ui';
 import type { Person } from '@/shared/api/sw-api';
 import { formatBirthYear } from '@/shared/lib/format/format-birth-year';
+import { cn } from '@/shared/lib/cn';
 
 type Props = {
   person: Person;
+  isActive?: boolean;
 };
 
-export const CharacterCard = ({ person }: Props) => {
+export const CharacterCard = ({ person, isActive = false }: Props) => {
   return (
-    <Card className="group space-y-4 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md">
+    <Card
+      className={cn(
+        'group space-y-4 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md',
+        isActive && 'border-primary/50 shadow-md'
+      )}
+    >
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">

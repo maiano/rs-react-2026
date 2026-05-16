@@ -1,21 +1,26 @@
+import type { MouseEvent } from 'react';
 import { useState } from 'react';
-import { Outlet } from 'react-router';
+import { Outlet, useNavigate, useParams } from 'react-router';
 import { Card } from '@/shared/ui';
 import { SearchBar } from '@/features/search';
 import { Pagination } from '@/features/pagination';
 import { CharacterList } from '@/widgets/character-list';
 import { useLocalStorage } from '@/shared/lib/hooks/use-local-storage';
+import { getCharactersRoute } from '@/shared/lib/routes/character-routes';
 import { usePageParam } from '../model/use-page-param';
 import { usePeopleSearch } from '../model/use-people-search';
 
 const STORAGE_KEY = 'sw-search';
 
 export function SearchPage() {
+  const navigate = useNavigate();
+  const { detailsId } = useParams();
   const [storedSearchTerm, setStoredSearchTerm] = useLocalStorage(STORAGE_KEY, '');
   const [searchValue, setSearchValue] = useState(storedSearchTerm);
   const [submittedSearchTerm, setSubmittedSearchTerm] = useState(storedSearchTerm);
   const { currentPage, updatePage } = usePageParam();
   const { items, loading, error, totalPages } = usePeopleSearch(submittedSearchTerm, currentPage);
+  const hasDetailsOpen = Boolean(detailsId);
 
   const handleSearch = () => {
     const trimmed = searchValue.trim();
@@ -38,6 +43,16 @@ export function SearchPage() {
     }
   };
 
+  const handleMainPanelClick = (event: MouseEvent<HTMLElement>) => {
+    if (!hasDetailsOpen) return;
+
+    const target = event.target as HTMLElement;
+
+    if (target.closest('a,button,input')) return;
+
+    navigate(getCharactersRoute(currentPage));
+  };
+
   return (
     <main className="min-h-screen bg-background">
       <div className="app-container py-6 space-y-6">
@@ -58,27 +73,35 @@ export function SearchPage() {
           />
         </Card>
 
-        <Card className="p-6">
-          <div>
-            {loading && <div className="text-muted-foreground">Loading...</div>}
+        <div
+          className={
+            hasDetailsOpen
+              ? 'grid gap-6 md:grid-cols-[minmax(0,1fr)_320px] md:items-start xl:grid-cols-[minmax(0,1fr)_360px]'
+              : 'grid gap-6'
+          }
+        >
+          <Card className="p-6" onClick={handleMainPanelClick}>
+            <div>
+              {loading && <div className="text-muted-foreground">Loading...</div>}
 
-            {!loading && error && <div className="text-destructive">{error}</div>}
+              {!loading && error && <div className="text-destructive">{error}</div>}
 
-            {!loading && !error && <CharacterList items={items} />}
-          </div>
-
-          {!loading && !error && items.length > 0 && (
-            <div className="mt-6">
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={updatePage}
-              />
+              {!loading && !error && <CharacterList items={items} compact={hasDetailsOpen} />}
             </div>
-          )}
 
-          <Outlet />
-        </Card>
+            {!loading && !error && items.length > 0 && (
+              <div className="mt-6">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={updatePage}
+                />
+              </div>
+            )}
+          </Card>
+
+          {hasDetailsOpen && <Outlet />}
+        </div>
       </div>
     </main>
   );

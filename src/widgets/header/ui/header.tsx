@@ -3,8 +3,8 @@ import { cn } from '@/shared/lib/cn';
 
 const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-    isActive ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted'
+    'rounded-xl px-3 py-2 text-sm font-medium transition-colors',
+    isActive ? 'text-primary' : 'text-foreground hover:bg-muted'
   );
 
 export function Header() {

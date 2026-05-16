@@ -50,7 +50,6 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Props) {
         onClick={() => onPageChange(currentPage - 1)}
       >
         <span aria-hidden="true">&#8249;</span>
-        {/* <span>Previous</span> */}
       </Button>
 
       {shouldShowLeadingEllipsis(pages) && (
@@ -84,7 +83,6 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Props) {
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
       >
-        {/* <span>Next</span> */}
         <span aria-hidden="true">&#8250;</span>
       </Button>
     </nav>

@@ -2,9 +2,21 @@ export type Person = {
   entityId: number;
   id: string;
   name: string;
+  heightCm: number | null;
+  massKg: number | null;
   gender: string;
   birthYearBBY: number | null;
-  homeworld?: { name: string } | null;
+  homeworld: { entityId?: number; id?: string; name: string } | null;
+  films: Array<{ entityId?: number; id?: string; title: string; episode?: number }>;
+  species: Array<{ entityId?: number; id?: string; name: string }>;
+  vehicles: Array<{ entityId?: number; id?: string; name: string }>;
+  starships: Array<{ entityId?: number; id?: string; name: string }>;
+  meta?: {
+    isForceUser?: boolean;
+    isJedi?: boolean;
+    isSith?: boolean;
+    faction?: string;
+  };
 };
 
 export type PeopleResponse = {
@@ -35,6 +47,18 @@ export async function fetchPeople(search: string, page = 1): Promise<PeopleRespo
   }
 
   const data: PeopleResponse = await res.json();
+
+  return data;
+}
+
+export async function fetchPerson(detailsId: string): Promise<Person> {
+  const res = await fetch(`${BASE_URL}/people/${detailsId}`);
+
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status}`);
+  }
+
+  const data: Person = await res.json();
 
   return data;
 }
