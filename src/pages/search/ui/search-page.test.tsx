@@ -76,7 +76,7 @@ describe('SearchPage', () => {
 
   it('shows details loading state and closes the panel', async () => {
     fetchPeopleMock.mockResolvedValue(mockPeopleResponse);
-    const deferredDetails = createDeferred(mockPeople[0]);
+    const deferredDetails = createDeferred<(typeof mockPeople)[number]>();
     fetchPersonMock.mockReturnValue(deferredDetails.promise);
 
     const router = renderSearchRoute('/characters/1?page=1');
