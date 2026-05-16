@@ -1,34 +1,40 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Outlet } from 'react-router';
 import { Card } from '@/shared/ui';
 import { SearchBar } from '@/features/search';
+import { Pagination } from '@/features/pagination';
 import { CharacterList } from '@/widgets/character-list';
-import { fetchPeople, type Person } from '@/shared/api/sw-api';
+import { useLocalStorage } from '@/shared/lib/hooks/use-local-storage';
+import { usePageParam } from '../model/use-page-param';
+import { usePeopleSearch } from '../model/use-people-search';
+
+const STORAGE_KEY = 'sw-search';
 
 export function SearchPage() {
-  const [items, setItems] = useState<Person[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const requestIdRef = useRef(0);
+  const [storedSearchTerm, setStoredSearchTerm] = useLocalStorage(STORAGE_KEY, '');
+  const [searchValue, setSearchValue] = useState(storedSearchTerm);
+  const [submittedSearchTerm, setSubmittedSearchTerm] = useState(storedSearchTerm);
+  const { currentPage, updatePage } = usePageParam();
+  const { items, loading, error, totalPages } = usePeopleSearch(submittedSearchTerm, currentPage);
 
-  const handleSearch = async (term: string) => {
-    const currentRequest = ++requestIdRef.current;
+  const handleSearch = () => {
+    const trimmed = searchValue.trim();
 
-    setLoading(true);
-    setError(null);
+    if (trimmed === submittedSearchTerm) {
+      if (currentPage !== 1) {
+        updatePage(1);
+      }
 
-    try {
-      const data = await fetchPeople(term);
+      setSearchValue(trimmed);
+      return;
+    }
 
-      if (currentRequest !== requestIdRef.current) return;
+    setStoredSearchTerm(trimmed);
+    setSearchValue(trimmed);
+    setSubmittedSearchTerm(trimmed);
 
-      setItems(data);
-      setLoading(false);
-    } catch (err) {
-      if (currentRequest !== requestIdRef.current) return;
-
-      setError(err instanceof Error ? err.message : 'Unknown error');
-      setLoading(false);
+    if (currentPage !== 1) {
+      updatePage(1);
     }
   };
 
@@ -43,7 +49,13 @@ export function SearchPage() {
 
             <h1 className="text-subheading text-foreground">Find characters across the galaxy</h1>
           </div>
-          <SearchBar onSearch={handleSearch} loading={loading} />
+
+          <SearchBar
+            value={searchValue}
+            onChange={setSearchValue}
+            onSearch={handleSearch}
+            loading={loading}
+          />
         </Card>
 
         <Card className="p-6">
@@ -54,6 +66,16 @@ export function SearchPage() {
 
             {!loading && !error && <CharacterList items={items} />}
           </div>
+
+          {!loading && !error && items.length > 0 && (
+            <div className="mt-6">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={updatePage}
+              />
+            </div>
+          )}
 
           <Outlet />
         </Card>

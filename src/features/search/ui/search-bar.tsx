@@ -1,60 +1,38 @@
-import { useEffect, useRef, useState } from 'react';
+import type { ChangeEvent, KeyboardEvent } from 'react';
 import { Button, Input, Spinner } from '@/shared/ui';
-import { useLocalStorage } from '@/shared/lib/hooks/use-local-storage';
 
 type Props = {
-  onSearch: (term: string) => void;
+  value: string;
+  onChange: (value: string) => void;
+  onSearch: () => void;
   loading?: boolean;
 };
 
-const STORAGE_KEY = 'sw-search';
-
-export function SearchBar({ onSearch, loading = false }: Props) {
-  const [lastSubmitted, setLastSubmitted] = useLocalStorage(STORAGE_KEY, '');
-  const [value, setValue] = useState('');
-  const initialSearchSentRef = useRef(false);
-
-  useEffect(() => {
-    if (initialSearchSentRef.current) return;
-
-    setValue(lastSubmitted);
-    onSearch(lastSubmitted);
-    initialSearchSentRef.current = true;
-  }, [lastSubmitted, onSearch]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+export function SearchBar({ value, onChange, onSearch, loading = false }: Props) {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
   };
 
-  const handleSearch = () => {
-    const trimmed = value.trim();
-
-    if (trimmed === lastSubmitted) return;
-
-    setLastSubmitted(trimmed);
-    setValue(trimmed);
-    onSearch(trimmed);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      handleSearch();
+      onSearch();
     }
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex flex-col gap-3 sm:flex-row">
       <Input
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder="Search characters..."
+        className="sm:flex-1"
       />
 
       <Button
-        onClick={handleSearch}
+        onClick={onSearch}
         loading={loading}
-        className="min-w-36"
+        className="sm:min-w-36"
         render={({ loading: isLoading }) => (
           <>
             {isLoading && <Spinner size="sm" variant="inverted" />}

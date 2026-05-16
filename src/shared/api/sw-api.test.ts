@@ -19,7 +19,7 @@ describe('fetchPeople', () => {
 
     const result = await fetchPeople('Luke');
 
-    expect(result).toEqual(mockPeopleResponse.results);
+    expect(result).toEqual(mockPeopleResponse);
   });
 
   it('calls fetch with expected search, page, and limit params', async () => {
@@ -27,7 +27,7 @@ describe('fetchPeople', () => {
       .spyOn(globalThis, 'fetch')
       .mockResolvedValue(createJsonResponse(mockPeopleResponse));
 
-    await fetchPeople('Luke');
+    await fetchPeople('Luke', 3);
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
 
@@ -35,8 +35,8 @@ describe('fetchPeople', () => {
 
     expect(requestUrl.pathname).toBe('/api/v1/people');
     expect(requestUrl.searchParams.get('search')).toBe('Luke');
-    expect(requestUrl.searchParams.get('page')).toBe('1');
-    expect(requestUrl.searchParams.get('limit')).toBe('10');
+    expect(requestUrl.searchParams.get('page')).toBe('3');
+    expect(requestUrl.searchParams.get('limit')).toBe('12');
   });
 
   it('omits search param when search term is empty', async () => {
@@ -50,7 +50,7 @@ describe('fetchPeople', () => {
 
     expect(requestUrl.searchParams.has('search')).toBe(false);
     expect(requestUrl.searchParams.get('page')).toBe('1');
-    expect(requestUrl.searchParams.get('limit')).toBe('10');
+    expect(requestUrl.searchParams.get('limit')).toBe('12');
   });
 
   it('throws an error when response is not ok', async () => {

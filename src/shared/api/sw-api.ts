@@ -7,21 +7,25 @@ export type Person = {
   homeworld?: { name: string } | null;
 };
 
-type ApiResponse = {
+export type PeopleResponse = {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
   results: Person[];
 };
 
 const BASE_URL = 'https://sw-next-api.vercel.app/api/v1';
 
-export async function fetchPeople(search: string): Promise<Person[]> {
+export async function fetchPeople(search: string, page = 1): Promise<PeopleResponse> {
   const url = new URL(`${BASE_URL}/people`);
 
   if (search) {
     url.searchParams.set('search', search);
   }
 
-  url.searchParams.set('page', '1');
-  url.searchParams.set('limit', '10');
+  url.searchParams.set('page', String(page));
+  url.searchParams.set('limit', '12');
 
   const res = await fetch(url.toString());
 
@@ -29,7 +33,7 @@ export async function fetchPeople(search: string): Promise<Person[]> {
     throw new Error(`Request failed: ${res.status}`);
   }
 
-  const data: ApiResponse = await res.json();
+  const data: PeopleResponse = await res.json();
 
-  return data.results;
+  return data;
 }
