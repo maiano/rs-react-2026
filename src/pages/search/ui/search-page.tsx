@@ -1,5 +1,5 @@
 import type { MouseEvent } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router';
 import { Card } from '@/shared/ui';
 import { SearchBar } from '@/features/search';
@@ -53,6 +53,22 @@ export function SearchPage() {
 
     navigate(getCharactersRoute(currentPage));
   };
+
+  useEffect(() => {
+    if (!hasDetailsOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+
+      navigate(getCharactersRoute(currentPage));
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [currentPage, hasDetailsOpen, navigate]);
 
   return (
     <main className="min-h-screen bg-background">
