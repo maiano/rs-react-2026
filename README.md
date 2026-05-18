@@ -1,8 +1,8 @@
 # Star Wars Character Search
 
-This is a React + TypeScript app. It lets you search Star Wars characters, keeps the last search term in `localStorage`, loads data from the API, and shows loading and error states.
+This is a React + TypeScript app for exploring Star Wars characters. It supports search with `localStorage` persistence, URL-synced pagination, a split-view character details panel, an About page, and a custom 404 page.
 
-The project is implemented with class components to match the task requirements.
+The current version is implemented with functional components, hooks, and React Router.
 
 ## Live Demo
 
@@ -15,7 +15,7 @@ Clone the repository and switch to the working branch:
 ```bash
 git clone https://github.com/maiano/rs-react-2026.git
 cd rs-react-2026
-git checkout class-components
+git checkout hooks-and-routing
 ```
 
 Install dependencies:
@@ -35,6 +35,14 @@ Open the app in your browser:
 ```text
 http://localhost:5173
 ```
+
+## Features
+
+- Search characters with persisted search term
+- URL-based pagination
+- Master-detail layout with nested routing
+- About page with author and course link
+- 404 page for unknown routes
 
 ## Checks
 

@@ -16,13 +16,16 @@ describe('CharacterCard', () => {
     expect(screen.getByText('male')).toBeInTheDocument();
     expect(screen.getByText('19 BBY')).toBeInTheDocument();
     expect(screen.getByText('Tatooine')).toBeInTheDocument();
+    expect(screen.getByText('Yes')).toBeInTheDocument();
+    expect(screen.getByText('rebels')).toBeInTheDocument();
   });
 
   it('gracefully handles missing optional fields', () => {
     render(<CharacterCard person={personWithUnknownFields} />);
 
     expect(screen.getByRole('heading', { name: 'R5-D4' })).toBeInTheDocument();
-    expect(screen.getAllByText('Unknown')).toHaveLength(2);
+    expect(screen.getAllByText('Unknown')).toHaveLength(3);
     expect(screen.getByText('n/a')).toBeInTheDocument();
+    expect(screen.getByText('No')).toBeInTheDocument();
   });
 });

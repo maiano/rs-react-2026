@@ -1,91 +1,47 @@
-import React from 'react';
+import type { ChangeEvent, KeyboardEvent } from 'react';
 import { Button, Input, Spinner } from '@/shared/ui';
 
 type Props = {
-  onSearch: (term: string) => void;
+  value: string;
+  onChange: (value: string) => void;
+  onSearch: () => void;
   loading?: boolean;
 };
 
-type State = {
-  value: string;
-  lastSubmitted: string;
-};
-
-const STORAGE_KEY = 'sw-search';
-
-export class SearchBar extends React.Component<Props, State> {
-  state: State = {
-    value: '',
-    lastSubmitted: '',
+export function SearchBar({ value, onChange, onSearch, loading = false }: Props) {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
   };
 
-  componentDidMount() {
-    const saved = localStorage.getItem(STORAGE_KEY);
-
-    if (saved) {
-      this.setState({
-        value: saved,
-        lastSubmitted: saved,
-      });
-
-      this.props.onSearch(saved);
-    } else {
-      this.props.onSearch('');
-    }
-  }
-
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ value: e.target.value });
-  };
-
-  handleSearch = () => {
-    const trimmed = this.state.value.trim();
-
-    if (trimmed === this.state.lastSubmitted) return;
-
-    localStorage.setItem(STORAGE_KEY, trimmed);
-
-    this.setState({
-      lastSubmitted: trimmed,
-      value: trimmed,
-    });
-
-    this.props.onSearch(trimmed);
-  };
-
-  handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      this.handleSearch();
+      onSearch();
     }
   };
 
-  render() {
-    const { value } = this.state;
-    const { loading = false } = this.props;
+  return (
+    <div className="flex flex-col gap-3 sm:flex-row">
+      <Input
+        value={value}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        placeholder="Search characters..."
+        className="sm:flex-1"
+      />
 
-    return (
-      <div className="flex items-center gap-3">
-        <Input
-          value={value}
-          onChange={this.handleChange}
-          onKeyDown={this.handleKeyDown}
-          placeholder="Search characters..."
-        />
-
-        <Button
-          onClick={this.handleSearch}
-          loading={loading}
-          className="min-w-36"
-          render={({ loading: isLoading }) => (
-            <>
-              {isLoading && <Spinner size="sm" variant="inverted" />}
-              <span>{isLoading ? 'Searching...' : 'Search'}</span>
-            </>
-          )}
-        >
-          Search
-        </Button>
-      </div>
-    );
-  }
+      <Button
+        onClick={onSearch}
+        loading={loading}
+        className="sm:min-w-36"
+        render={({ loading: isLoading }) => (
+          <>
+            {isLoading && <Spinner size="sm" variant="inverted" />}
+            <span>{isLoading ? 'Searching...' : 'Search'}</span>
+          </>
+        )}
+      >
+        Search
+      </Button>
+    </div>
+  );
 }
