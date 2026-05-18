@@ -96,4 +96,20 @@ describe('SearchPage', () => {
       expect(router.state.location.search).toBe('?page=1');
     });
   });
+
+  it('closes details panel on Escape key press', async () => {
+    fetchPeopleMock.mockResolvedValue(mockPeopleResponse);
+    fetchPersonMock.mockResolvedValue(mockPeople[0]);
+
+    const router = renderSearchRoute('/characters/1?page=1');
+
+    expect(await screen.findByText('A New Hope')).toBeInTheDocument();
+
+    await userEvent.keyboard('{Escape}');
+
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe('/characters');
+      expect(router.state.location.search).toBe('?page=1');
+    });
+  });
 });
