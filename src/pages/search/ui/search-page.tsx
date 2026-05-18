@@ -5,6 +5,7 @@ import { Card } from '@/shared/ui';
 import { SearchBar } from '@/features/search';
 import { Pagination } from '@/features/pagination';
 import { CharacterList } from '@/widgets/character-list';
+import { SelectedItemsFlyout } from '@/widgets/selected-items-flyout';
 import { useLocalStorage } from '@/shared/lib/hooks/use-local-storage';
 import { getCharactersRoute } from '@/shared/lib/routes/character-routes';
 import { usePageParam } from '../model/use-page-param';
@@ -102,6 +103,8 @@ export function SearchPage() {
 
           {hasDetailsOpen && <Outlet />}
         </div>
+
+        <SelectedItemsFlyout />
       </div>
     </main>
   );

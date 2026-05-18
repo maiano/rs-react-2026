@@ -12,7 +12,7 @@ export const CharacterCard = ({ person, isActive = false }: Props) => {
   return (
     <Card
       className={cn(
-        'group space-y-4 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md',
+        'space-y-4 p-5',
         isActive && 'border-primary/50 shadow-md'
       )}
     >

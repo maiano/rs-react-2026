@@ -5,15 +5,12 @@ export const useIsSelected = (id: number) => useSelectionStore((s) => Boolean(s.
 
 export const useSelectedCount = () => useSelectionStore((s) => Object.keys(s.selected).length);
 
-export const useSelectedItems = () => useSelectionStore((s) => Object.values(s.selected));
+export const useSelectedItems = () => useSelectionStore(useShallow((s) => Object.values(s.selected)));
 
-export const useSelectionActions = () =>
-  useSelectionStore(
-    useShallow((s) => ({
-      toggle: s.toggle,
-      remove: s.remove,
-      clear: s.clear,
-    }))
-  );
+export const useToggleSelection = () => useSelectionStore((s) => s.toggle);
+
+export const useRemoveSelection = () => useSelectionStore((s) => s.remove);
+
+export const useClearSelection = () => useSelectionStore((s) => s.clear);
 
 export const useSelectedIds = () => useSelectionStore((s) => Object.keys(s.selected));
