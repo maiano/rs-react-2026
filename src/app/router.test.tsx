@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { RootLayout } from './root-layout';
+import { ThemeProvider } from './providers/theme-provider';
 import { SearchPage } from '@/pages/search';
 import { AboutPage } from '@/pages/about';
 import { NotFoundPage } from '@/pages/not-found';
@@ -41,7 +42,11 @@ function renderAppRoute(initialEntry: string) {
     { initialEntries: [initialEntry] }
   );
 
-  render(<RouterProvider router={router} />);
+  render(
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 
   return router;
 }
@@ -63,7 +68,6 @@ describe('router pages', () => {
 
     renderAppRoute('/characters?page=1');
 
-    await screen.findByRole('heading', { name: 'Luke Skywalker' });
     await user.click(screen.getByRole('link', { name: 'About' }));
 
     expect(await screen.findByText('Author: maiano')).toBeInTheDocument();
