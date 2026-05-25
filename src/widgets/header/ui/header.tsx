@@ -20,7 +20,7 @@ export function Header() {
   };
 
   return (
-    <header className="border-b border-border/80 bg-card/80 backdrop-blur-sm">
+    <header className="sticky top-0 z-40 border-b border-border/80 bg-card/80 backdrop-blur-sm">
       <div className="app-container flex min-h-16 flex-col gap-3 py-3 md:flex-row md:items-center md:justify-between">
         <Link
           to="/characters?page=1"
