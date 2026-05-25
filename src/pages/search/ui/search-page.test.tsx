@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryRouter, RouterProvider } from 'react-router';
+import { QueryProvider } from '@/app/providers/query-provider';
 import { SearchPage } from './search-page';
 import { CharacterDetailsPanel } from '@/widgets/character-details';
 import { mockPeople, mockPeopleResponse } from '@/test/mocks/characters';
@@ -40,7 +41,11 @@ function renderSearchRoute(initialEntry = '/characters?page=1') {
     { initialEntries: [initialEntry] }
   );
 
-  render(<RouterProvider router={router} />);
+  render(
+    <QueryProvider>
+      <RouterProvider router={router} />
+    </QueryProvider>
+  );
 
   return router;
 }
@@ -83,7 +88,7 @@ describe('SearchPage', () => {
     const user = userEvent.setup();
 
     expect(await screen.findByText('Loading details...')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Luke Skywalker' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Luke Skywalker' })).toBeInTheDocument();
 
     deferredDetails.resolve(mockPeople[0]);
 
