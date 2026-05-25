@@ -1,14 +1,16 @@
 import { Link, useParams, useSearchParams } from 'react-router';
+import { usePersonQuery } from '@/entities/character/api/use-person-query';
 import { Button, Card, Spinner } from '@/shared/ui';
 import { formatBirthYear } from '@/shared/lib/format/format-birth-year';
 import { getCharactersRoute } from '@/shared/lib/routes/character-routes';
-import { usePersonDetails } from '../model/use-person-details';
 
 export function CharacterDetailsPanel() {
   const { detailsId } = useParams();
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? '1';
-  const { item, error, loading } = usePersonDetails(detailsId);
+  const { data: item, error, isPending } = usePersonQuery(detailsId);
+  const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+  const loading = isPending;
 
   return (
     <aside className="md:sticky md:top-6">
@@ -36,7 +38,7 @@ export function CharacterDetailsPanel() {
           </div>
         )}
 
-        {!loading && error && <p className="mt-4 text-body-sm text-destructive">{error}</p>}
+        {!loading && error && <p className="mt-4 text-body-sm text-destructive">{errorMessage}</p>}
 
         {!loading && !error && item && (
           <div className="mt-6 space-y-5">

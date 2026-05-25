@@ -2,11 +2,11 @@ import type { MouseEvent } from 'react';
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router';
 import { Card } from '@/shared/ui';
+import { usePeopleQuery } from '@/entities/character/api/use-people-query';
 import { SearchBar } from '@/features/search';
 import { Pagination } from '@/features/pagination';
 import { CharacterList } from '@/widgets/character-list';
 import { SelectedItemsFlyout } from '@/widgets/selected-items-flyout';
-import { usePeopleListQuery } from '@/shared/api/people-query';
 import { useLocalStorage } from '@/shared/lib/hooks/use-local-storage';
 import { getCharactersRoute } from '@/shared/lib/routes/character-routes';
 import { usePageParam } from '../model/use-page-param';
@@ -20,7 +20,10 @@ export function SearchPage() {
   const [searchValue, setSearchValue] = useState(storedSearchTerm);
   const [submittedSearchTerm, setSubmittedSearchTerm] = useState(storedSearchTerm);
   const { currentPage, updatePage } = usePageParam();
-  const { data, error, isPending, isFetching } = usePeopleListQuery(submittedSearchTerm, currentPage);
+  const { data, error, isPending, isFetching } = usePeopleQuery({
+    search: submittedSearchTerm,
+    page: currentPage,
+  });
   const hasDetailsOpen = Boolean(detailsId);
   const items = data?.results ?? [];
   const totalPages = data?.pages ?? 0;
