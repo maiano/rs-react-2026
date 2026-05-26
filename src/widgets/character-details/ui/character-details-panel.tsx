@@ -1,16 +1,34 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { usePersonQuery } from '@/entities/character/api/use-person-query';
+import { peopleKeys } from '@/shared/api/query-keys';
 import { Button, Card, Spinner } from '@/shared/ui';
 import { formatBirthYear } from '@/shared/lib/format/format-birth-year';
 import { getCharactersRoute } from '@/shared/lib/routes/character-routes';
 
 export function CharacterDetailsPanel() {
+  const queryClient = useQueryClient();
   const { detailsId } = useParams();
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? '1';
+  const [refreshInFlight, setRefreshInFlight] = useState(false);
   const { data: item, error, isPending } = usePersonQuery(detailsId);
   const errorMessage = error instanceof Error ? error.message : 'Unknown error';
   const loading = isPending;
+
+  const handleRefresh = async () => {
+    if (!detailsId) return;
+
+    setRefreshInFlight(true);
+    try {
+      await queryClient.invalidateQueries({
+        queryKey: peopleKeys.detail(detailsId),
+      });
+    } finally {
+      setRefreshInFlight(false);
+    }
+  };
 
   return (
     <aside className="md:sticky md:top-6">
@@ -24,11 +42,31 @@ export function CharacterDetailsPanel() {
             </h2>
           </div>
 
-          <Link to={getCharactersRoute(page)}>
-            <Button variant="secondary" size="sm">
-              Close
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              loading={refreshInFlight}
+              className="min-w-32 border border-border"
+              onClick={() => {
+                void handleRefresh();
+              }}
+              render={({ loading: isLoading }) => (
+                <>
+                  {isLoading && <Spinner size="sm" />}
+                  <span>{isLoading ? 'Refreshing...' : 'Refresh'}</span>
+                </>
+              )}
+            >
+              Refresh
             </Button>
-          </Link>
+
+            <Link to={getCharactersRoute(page)}>
+              <Button variant="secondary" size="sm">
+                Close
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {loading && (
