@@ -15,6 +15,11 @@ import { usePageParam } from '../model/use-page-param';
 
 const STORAGE_KEY = 'sw-search';
 
+type SearchLoadingParams = {
+  search: string;
+  page: number;
+};
+
 export function SearchPage() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -22,7 +27,7 @@ export function SearchPage() {
   const [storedSearchTerm, setStoredSearchTerm] = useLocalStorage(STORAGE_KEY, '');
   const [searchValue, setSearchValue] = useState(storedSearchTerm);
   const [submittedSearchTerm, setSubmittedSearchTerm] = useState(storedSearchTerm);
-  const [searchInFlight, setSearchInFlight] = useState(false);
+  const [searchLoadingParams, setSearchLoadingParams] = useState<SearchLoadingParams | null>(null);
   const [refreshInFlight, setRefreshInFlight] = useState(false);
   const { currentPage, updatePage } = usePageParam();
   const { data, error, isPending, isFetching } = usePeopleQuery({
@@ -34,13 +39,14 @@ export function SearchPage() {
   const totalPages = data?.pages ?? 0;
   const errorMessage = error instanceof Error ? error.message : 'Unknown error';
   const loading = isPending;
+  const searchInFlight = searchLoadingParams !== null;
   const backgroundRefreshing = isFetching && !loading && !searchInFlight && !refreshInFlight;
 
-  const shouldTrackSearchLoading = (search: string, page: number) => {
+  const shouldTrackSearchLoading = (params: SearchLoadingParams) => {
     const nextQueryState = queryClient.getQueryState(
       peopleKeys.list({
-        search,
-        page,
+        search: params.search,
+        page: params.page,
       })
     );
 
@@ -64,20 +70,25 @@ export function SearchPage() {
 
   const handleSearch = () => {
     const trimmed = searchValue.trim();
-    const nextPage = 1;
+    const nextSearchParams = {
+      search: trimmed,
+      page: 1,
+    } satisfies SearchLoadingParams;
 
     if (trimmed === submittedSearchTerm) {
       setSearchValue(trimmed);
 
       if (currentPage !== 1) {
-        setSearchInFlight(shouldTrackSearchLoading(trimmed, nextPage));
+        setSearchLoadingParams(
+          shouldTrackSearchLoading(nextSearchParams) ? nextSearchParams : null
+        );
         updatePage(1);
       }
 
       return;
     }
 
-    setSearchInFlight(shouldTrackSearchLoading(trimmed, nextPage));
+    setSearchLoadingParams(shouldTrackSearchLoading(nextSearchParams) ? nextSearchParams : null);
     setStoredSearchTerm(trimmed);
     setSearchValue(trimmed);
     setSubmittedSearchTerm(trimmed);
@@ -114,23 +125,21 @@ export function SearchPage() {
   }, [currentPage, hasDetailsOpen, navigate]);
 
   useEffect(() => {
-    if (!searchInFlight) return;
+    if (!searchLoadingParams) return;
 
-    const queryKey = peopleKeys.list({
-      search: submittedSearchTerm,
-      page: currentPage,
-    });
-
-    const unsubscribe = queryClient.getQueryCache().subscribe(() => {
-      const queryState = queryClient.getQueryState(queryKey);
-
-      if (queryState?.fetchStatus === 'idle') {
-        setSearchInFlight(false);
+    const queryKey = peopleKeys.list(searchLoadingParams);
+    const stopIfIdle = () => {
+      if (queryClient.isFetching({ queryKey, exact: true }) === 0) {
+        setSearchLoadingParams(null);
       }
-    });
+    };
+
+    const unsubscribe = queryClient.getQueryCache().subscribe(stopIfIdle);
+
+    stopIfIdle();
 
     return unsubscribe;
-  }, [currentPage, queryClient, searchInFlight, submittedSearchTerm]);
+  }, [queryClient, searchLoadingParams]);
 
   return (
     <main className="min-h-screen bg-background">
