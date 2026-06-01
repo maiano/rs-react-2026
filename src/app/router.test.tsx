@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { RootLayout } from './root-layout';
+import { QueryProvider } from './providers/query-provider';
 import { ThemeProvider } from './providers/theme-provider';
 import { SearchPage } from '@/pages/search';
 import { AboutPage } from '@/pages/about';
@@ -44,7 +45,9 @@ function renderAppRoute(initialEntry: string) {
 
   render(
     <ThemeProvider>
-      <RouterProvider router={router} />
+      <QueryProvider>
+        <RouterProvider router={router} />
+      </QueryProvider>
     </ThemeProvider>
   );
 

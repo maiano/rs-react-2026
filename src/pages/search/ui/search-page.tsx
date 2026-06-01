@@ -1,7 +1,10 @@
 import type { MouseEvent } from 'react';
 import { useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Outlet, useNavigate, useParams } from 'react-router';
-import { Card } from '@/shared/ui';
+import { peopleKeys } from '@/shared/api/query-keys';
+import { Button, Card, Spinner } from '@/shared/ui';
+import { usePeopleQuery } from '@/entities/character/api/use-people-query';
 import { SearchBar } from '@/features/search';
 import { Pagination } from '@/features/pagination';
 import { CharacterList } from '@/widgets/character-list';
@@ -9,32 +12,83 @@ import { SelectedItemsFlyout } from '@/widgets/selected-items-flyout';
 import { useLocalStorage } from '@/shared/lib/hooks/use-local-storage';
 import { getCharactersRoute } from '@/shared/lib/routes/character-routes';
 import { usePageParam } from '../model/use-page-param';
-import { usePeopleSearch } from '../model/use-people-search';
 
 const STORAGE_KEY = 'sw-search';
 
+type SearchLoadingParams = {
+  search: string;
+  page: number;
+};
+
 export function SearchPage() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { detailsId } = useParams();
   const [storedSearchTerm, setStoredSearchTerm] = useLocalStorage(STORAGE_KEY, '');
   const [searchValue, setSearchValue] = useState(storedSearchTerm);
   const [submittedSearchTerm, setSubmittedSearchTerm] = useState(storedSearchTerm);
+  const [searchLoadingParams, setSearchLoadingParams] = useState<SearchLoadingParams | null>(null);
+  const [refreshInFlight, setRefreshInFlight] = useState(false);
   const { currentPage, updatePage } = usePageParam();
-  const { items, loading, error, totalPages } = usePeopleSearch(submittedSearchTerm, currentPage);
+  const { data, error, isPending, isFetching } = usePeopleQuery({
+    search: submittedSearchTerm,
+    page: currentPage,
+  });
   const hasDetailsOpen = Boolean(detailsId);
+  const items = data?.results ?? [];
+  const totalPages = data?.pages ?? 0;
+  const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+  const loading = isPending;
+  const searchInFlight = searchLoadingParams !== null;
+  const backgroundRefreshing = isFetching && !loading && !searchInFlight && !refreshInFlight;
+
+  const shouldTrackSearchLoading = (params: SearchLoadingParams) => {
+    const nextQueryState = queryClient.getQueryState(
+      peopleKeys.list({
+        search: params.search,
+        page: params.page,
+      })
+    );
+
+    return !nextQueryState?.data;
+  };
+
+  const handleRefresh = async () => {
+    setRefreshInFlight(true);
+
+    try {
+      await queryClient.invalidateQueries({
+        queryKey: peopleKeys.list({
+          search: submittedSearchTerm,
+          page: currentPage,
+        }),
+      });
+    } finally {
+      setRefreshInFlight(false);
+    }
+  };
 
   const handleSearch = () => {
     const trimmed = searchValue.trim();
+    const nextSearchParams = {
+      search: trimmed,
+      page: 1,
+    } satisfies SearchLoadingParams;
 
     if (trimmed === submittedSearchTerm) {
+      setSearchValue(trimmed);
+
       if (currentPage !== 1) {
+        setSearchLoadingParams(
+          shouldTrackSearchLoading(nextSearchParams) ? nextSearchParams : null
+        );
         updatePage(1);
       }
 
-      setSearchValue(trimmed);
       return;
     }
 
+    setSearchLoadingParams(shouldTrackSearchLoading(nextSearchParams) ? nextSearchParams : null);
     setStoredSearchTerm(trimmed);
     setSearchValue(trimmed);
     setSubmittedSearchTerm(trimmed);
@@ -70,23 +124,67 @@ export function SearchPage() {
     };
   }, [currentPage, hasDetailsOpen, navigate]);
 
+  useEffect(() => {
+    if (!searchLoadingParams) return;
+
+    const queryKey = peopleKeys.list(searchLoadingParams);
+    const stopIfIdle = () => {
+      if (queryClient.isFetching({ queryKey, exact: true }) === 0) {
+        setSearchLoadingParams(null);
+      }
+    };
+
+    const unsubscribe = queryClient.getQueryCache().subscribe(stopIfIdle);
+
+    stopIfIdle();
+
+    return unsubscribe;
+  }, [queryClient, searchLoadingParams]);
+
   return (
     <main className="min-h-screen bg-background">
       <div className="app-container py-6 space-y-6">
         <Card className="p-6">
-          <div className="mb-4">
-            <p className="text-xs font-medium uppercase text-muted-foreground">
-              Star Wars Database
-            </p>
+          <div className="mb-4 flex items-start justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-3">
+                <p className="text-xs font-medium uppercase text-muted-foreground">
+                  Star Wars Database
+                </p>
+                {backgroundRefreshing && (
+                  <span className="text-xs text-muted-foreground">Refreshing...</span>
+                )}
+              </div>
 
-            <h1 className="text-subheading text-foreground">Find characters across the galaxy</h1>
+              <h1 className="text-subheading text-foreground">
+                Find characters across the galaxy
+              </h1>
+            </div>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              loading={refreshInFlight}
+              className="min-w-32 border border-border"
+              onClick={() => {
+                void handleRefresh();
+              }}
+              render={({ loading: isLoading }) => (
+                <>
+                  {isLoading && <Spinner size="sm" />}
+                  <span>{isLoading ? 'Refreshing...' : 'Refresh'}</span>
+                </>
+              )}
+            >
+              Refresh
+            </Button>
           </div>
 
           <SearchBar
             value={searchValue}
             onChange={setSearchValue}
             onSearch={handleSearch}
-            loading={loading}
+            loading={searchInFlight}
           />
         </Card>
 
@@ -101,7 +199,7 @@ export function SearchPage() {
             <div>
               {loading && <div className="text-muted-foreground">Loading...</div>}
 
-              {!loading && error && <div className="text-destructive">{error}</div>}
+              {!loading && error && <div className="text-destructive">{errorMessage}</div>}
 
               {!loading && !error && <CharacterList items={items} compact={hasDetailsOpen} />}
             </div>
