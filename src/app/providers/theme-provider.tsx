@@ -1,3 +1,5 @@
+'use client';
+
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { ThemeContext, type Theme } from '@/shared/lib/theme/theme-context';

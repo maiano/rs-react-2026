@@ -5,5 +5,13 @@
   },
   "migration": {
     "title": "Галактический архив"
+  },
+  "header": {
+    "brand": "Галактический архив",
+    "search": "Поиск",
+    "about": "О проекте",
+    "api": "Star Wars API",
+    "switchToLightTheme": "Переключить на светлую тему",
+    "switchToDarkTheme": "Переключить на темную тему"
   }
 }

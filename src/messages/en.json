@@ -5,5 +5,13 @@
   },
   "migration": {
     "title": "Galactic Archive"
+  },
+  "header": {
+    "brand": "Galactic Archive",
+    "search": "Search",
+    "about": "About",
+    "api": "Star Wars API",
+    "switchToLightTheme": "Switch to light theme",
+    "switchToDarkTheme": "Switch to dark theme"
   }
 }

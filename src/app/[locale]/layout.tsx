@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
+import { Header } from '@/widgets/header';
+import { Providers } from './providers';
 
 type LocaleLayoutProps = {
   children: ReactNode;
@@ -26,7 +28,10 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      {children}
+      <Providers>
+        <Header />
+        {children}
+      </Providers>
     </NextIntlClientProvider>
   );
 }

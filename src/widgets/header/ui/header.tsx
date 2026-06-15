@@ -1,8 +1,13 @@
-import { Link, NavLink } from 'react-router';
+'use client';
+
+import { useTranslations } from 'next-intl';
+import { Link, usePathname } from '@/i18n/navigation';
 import { cn } from '@/shared/lib/cn';
 import { useTheme } from '@/shared/lib/theme/use-theme';
+import { LanguageSwitcher } from '@/features/language-switcher';
+import { Button } from '@/shared/ui/button';
 
-const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
+const navLinkClassName = (isActive: boolean) =>
   cn(
     'rounded-xl px-3 py-2 text-sm font-medium transition-colors',
     isActive ? 'text-primary' : 'text-foreground hover:bg-muted'
@@ -12,6 +17,8 @@ const externalLinkClassName =
   'rounded-xl px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted';
 
 export function Header() {
+  const t = useTranslations('header');
+  const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const isDarkTheme = theme === 'dark';
 
@@ -23,20 +30,23 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-border/80 bg-card/80 backdrop-blur-sm">
       <div className="app-container flex min-h-16 flex-col gap-3 py-3 md:flex-row md:items-center md:justify-between">
         <Link
-          to="/characters?page=1"
+          href="/characters?page=1"
           className="font-heading text-xl tracking-tight text-foreground"
         >
-          Galactic Archive
+          {t('brand')}
         </Link>
 
         <nav className="flex flex-wrap items-center gap-2">
-          <NavLink to="/characters?page=1" className={navLinkClassName}>
-            Search
-          </NavLink>
+          <Link
+            href="/characters?page=1"
+            className={navLinkClassName(pathname.startsWith('/characters'))}
+          >
+            {t('search')}
+          </Link>
 
-          <NavLink to="/about" className={navLinkClassName}>
-            About
-          </NavLink>
+          <Link href="/about" className={navLinkClassName(pathname === '/about')}>
+            {t('about')}
+          </Link>
 
           <a
             href="https://sw-next-api.vercel.app/"
@@ -44,13 +54,16 @@ export function Header() {
             rel="noreferrer"
             className={externalLinkClassName}
           >
-            Star Wars API
+            {t('api')}
           </a>
 
-          <button
-            type="button"
+          <LanguageSwitcher />
+
+          <Button
+            variant="ghost"
+            size="md"
             onClick={toggleTheme}
-            aria-label={isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'}
+            aria-label={isDarkTheme ? t('switchToLightTheme') : t('switchToDarkTheme')}
             className={cn(
               'inline-flex h-10 w-10 items-center justify-center rounded-xl transition-colors hover:bg-muted focus:outline-none focus-visible:ring-4 focus-visible:ring-ring/15',
               isDarkTheme ? 'text-muted-foreground hover:text-foreground' : 'text-primary'
@@ -74,7 +87,7 @@ export function Header() {
               <path d="m19 5-1.256 1.256" />
               <path d="M20 12h2" />
             </svg>
-          </button>
+          </Button>
         </nav>
       </div>
     </header>
