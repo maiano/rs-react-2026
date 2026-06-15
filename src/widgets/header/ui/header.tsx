@@ -5,7 +5,7 @@ import { Link, usePathname } from '@/i18n/navigation';
 import { cn } from '@/shared/lib/cn';
 import { useTheme } from '@/shared/lib/theme/use-theme';
 import { LanguageSwitcher } from '@/features/language-switcher';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/shared/ui';
 
 const navLinkClassName = (isActive: boolean) =>
   cn(

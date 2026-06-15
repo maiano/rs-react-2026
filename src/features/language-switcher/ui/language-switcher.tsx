@@ -24,20 +24,19 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <label className="sr-only">
-      Language
-      <select
-        value={locale}
-        onChange={(event) => handleLocaleChange(event.target.value as AppLocale)}
-        className="not-sr-only h-10 rounded-xl border border-border bg-card px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted focus:outline-none focus-visible:ring-4 focus-visible:ring-ring/15"
-        aria-label="Language"
-      >
-        {routing.locales.map((supportedLocale) => (
-          <option key={supportedLocale} value={supportedLocale}>
-            {localeLabels[supportedLocale]}
-          </option>
-        ))}
-      </select>
-    </label>
+    <select
+      id="language"
+      name="language"
+      value={locale}
+      onChange={(event) => handleLocaleChange(event.target.value as AppLocale)}
+      className="h-10 bg-card px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted focus:outline-none focus-visible:ring-4 focus-visible:ring-ring/15"
+      aria-label="Language"
+    >
+      {routing.locales.map((supportedLocale) => (
+        <option key={supportedLocale} value={supportedLocale}>
+          {localeLabels[supportedLocale]}
+        </option>
+      ))}
+    </select>
   );
 }
