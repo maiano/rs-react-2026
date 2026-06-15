@@ -1,8 +1,8 @@
 import { createBrowserRouter, Navigate } from 'react-router';
 import { RootLayout } from '@/app/root-layout';
-import { SearchPage } from '@/pages/search';
-import { AboutPage } from '@/pages/about';
-import { NotFoundPage } from '@/pages/not-found';
+import { SearchPage } from '@/views/search';
+import { AboutPage } from '@/views/about';
+import { NotFoundPage } from '@/views/not-found';
 import { CharacterDetailsPanel } from '@/widgets/character-details';
 
 export const router = createBrowserRouter([

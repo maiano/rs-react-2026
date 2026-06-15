@@ -9,8 +9,11 @@ function readNumberEnv(value: string | undefined, fallback: number): number {
 
 export const env = {
   queryStaleTimeMs: readNumberEnv(
-    import.meta.env.VITE_QUERY_STALE_TIME_MS,
+    process.env.NEXT_PUBLIC_QUERY_STALE_TIME_MS,
     DEFAULT_QUERY_STALE_TIME_MS
   ),
-  queryGcTimeMs: readNumberEnv(import.meta.env.VITE_QUERY_GC_TIME_MS, DEFAULT_QUERY_GC_TIME_MS),
+  queryGcTimeMs: readNumberEnv(
+    process.env.NEXT_PUBLIC_QUERY_GC_TIME_MS,
+    DEFAULT_QUERY_GC_TIME_MS
+  ),
 };
