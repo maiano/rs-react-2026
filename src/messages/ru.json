@@ -13,5 +13,18 @@
     "api": "Star Wars API",
     "switchToLightTheme": "Переключить на светлую тему",
     "switchToDarkTheme": "Переключить на темную тему"
+  },
+  "about": {
+    "eyebrow": "О проекте",
+    "title": "Поиск персонажей Star Wars",
+    "author": "Автор: maiano",
+    "description": "Этот проект создан для курса RS School React.",
+    "courseLink": "Курс RS School React"
+  },
+  "notFound": {
+    "eyebrow": "Ошибка 404",
+    "title": "Страница не найдена",
+    "description": "Запрошенный маршрут не существует или еще не реализован.",
+    "backToSearch": "Вернуться к поиску"
   }
 }

@@ -13,5 +13,18 @@
     "api": "Star Wars API",
     "switchToLightTheme": "Switch to light theme",
     "switchToDarkTheme": "Switch to dark theme"
+  },
+  "about": {
+    "eyebrow": "About",
+    "title": "Star Wars Character Search",
+    "author": "Author: maiano",
+    "description": "This project is built for the RS School React course.",
+    "courseLink": "RS School React Course"
+  },
+  "notFound": {
+    "eyebrow": "Error 404",
+    "title": "Page not found",
+    "description": "The route you requested does not exist or is still under construction.",
+    "backToSearch": "Back to Search"
   }
 }
