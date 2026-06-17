@@ -1,13 +1,16 @@
-import { getTranslations } from 'next-intl/server';
+import { redirect } from '@/i18n/navigation';
 
-export default async function LocaleHomePage() {
-  const t = await getTranslations('migration');
+type LocaleHomePageProps = {
+  params: Promise<{
+    locale: string;
+  }>;
+};
 
-  return (
-    <main className="min-h-screen bg-background">
-      <div className="app-container py-6">
-        <h1 className="mt-2 text-subheading text-foreground">{t('title')}</h1>
-      </div>
-    </main>
-  );
+export default async function LocaleHomePage({ params }: LocaleHomePageProps) {
+  const { locale } = await params;
+
+  redirect({
+    href: '/characters?page=1',
+    locale,
+  });
 }

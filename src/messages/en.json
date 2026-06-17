@@ -26,5 +26,16 @@
     "title": "Page not found",
     "description": "The route you requested does not exist or is still under construction.",
     "backToSearch": "Back to Search"
+  },
+  "characters": {
+    "eyebrow": "Star Wars Database",
+    "title": "Find characters across the galaxy",
+    "searchPlaceholder": "Search characters...",
+    "searchButton": "Search",
+    "empty": "No results found",
+    "error": "Failed to load characters.",
+    "detailsEyebrow": "Details",
+    "detailsTitle": "Select a character",
+    "detailsDescription": "Choose a character from the list to view details."
   }
 }
