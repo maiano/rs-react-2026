@@ -36,6 +36,27 @@
     "error": "Failed to load characters.",
     "detailsEyebrow": "Details",
     "detailsTitle": "Select a character",
-    "detailsDescription": "Choose a character from the list to view details."
+    "detailsDescription": "Choose a character from the list to view details.",
+    "detailLabels": {
+      "name": "Name",
+      "gender": "Gender",
+      "birthYear": "Birth year",
+      "homeworld": "Homeworld",
+      "height": "Height",
+      "mass": "Mass",
+      "alignment": "Alignment",
+      "forceUser": "Force user",
+      "jedi": "Jedi",
+      "sith": "Sith",
+      "faction": "Faction",
+      "films": "Films",
+      "species": "Species",
+      "vehicles": "Vehicles",
+      "starships": "Starships",
+      "unknown": "Unknown",
+      "yes": "Yes",
+      "no": "No",
+      "close": "Close"
+    }
   }
 }

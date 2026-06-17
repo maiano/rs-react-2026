@@ -1,11 +1,12 @@
 import { Link } from '@/i18n/navigation';
 import { cn } from '@/shared/lib/cn';
-import { getCharactersRoute } from '@/shared/lib/routes/character-routes';
+import { getCharacterDetailsRoute, getCharactersRoute } from '@/shared/lib/routes/character-routes';
 
 type PaginationLinksProps = {
   currentPage: number;
   totalPages: number;
   search: string;
+  detailsId?: string;
 };
 
 const MAX_VISIBLE_PAGES = 5;
@@ -44,18 +45,25 @@ function pageLinkClassName(active = false) {
   );
 }
 
-export function PaginationLinks({ currentPage, totalPages, search }: PaginationLinksProps) {
+export function PaginationLinks({
+  currentPage,
+  totalPages,
+  search,
+  detailsId,
+}: PaginationLinksProps) {
   if (totalPages <= 1) {
     return null;
   }
 
   const pages = getVisiblePages(currentPage, totalPages);
+  const getPageRoute = (page: number) =>
+    detailsId ? getCharacterDetailsRoute(detailsId, page, search) : getCharactersRoute(page, search);
 
   return (
     <nav aria-label="Pagination" className="flex flex-wrap items-center justify-center gap-2">
       {currentPage > 1 ? (
         <Link
-          href={getCharactersRoute(currentPage - 1, search)}
+          href={getPageRoute(currentPage - 1)}
           className={pageLinkClassName()}
           aria-label="Previous page"
         >
@@ -76,7 +84,7 @@ export function PaginationLinks({ currentPage, totalPages, search }: PaginationL
       {pages.map((page) => (
         <Link
           key={page}
-          href={getCharactersRoute(page, search)}
+          href={getPageRoute(page)}
           className={pageLinkClassName(page === currentPage)}
           aria-current={page === currentPage ? 'page' : undefined}
         >
@@ -92,7 +100,7 @@ export function PaginationLinks({ currentPage, totalPages, search }: PaginationL
 
       {currentPage < totalPages ? (
         <Link
-          href={getCharactersRoute(currentPage + 1, search)}
+          href={getPageRoute(currentPage + 1)}
           className={pageLinkClassName()}
           aria-label="Next page"
         >
