@@ -34,6 +34,7 @@
     "searchButton": "Search",
     "empty": "No results found",
     "error": "Failed to load characters.",
+    "selectCharacter": "Select {name}",
     "detailsEyebrow": "Details",
     "detailsTitle": "Select a character",
     "detailsDescription": "Choose a character from the list to view details.",
@@ -58,5 +59,10 @@
       "no": "No",
       "close": "Close"
     }
+  },
+  "selection": {
+    "selectedCount": "Selected characters",
+    "clear": "Unselect all",
+    "download": "Download"
   }
 }

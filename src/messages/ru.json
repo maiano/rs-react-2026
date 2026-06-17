@@ -34,6 +34,7 @@
     "searchButton": "Поиск",
     "empty": "Ничего не найдено",
     "error": "Не удалось загрузить персонажей.",
+    "selectCharacter": "Выбрать {name}",
     "detailsEyebrow": "Детали",
     "detailsTitle": "Выберите персонажа",
     "detailsDescription": "Выберите персонажа из списка, чтобы увидеть детали.",
@@ -58,5 +59,10 @@
       "no": "Нет",
       "close": "Закрыть"
     }
+  },
+  "selection": {
+    "selectedCount": "Выбрано персонажей",
+    "clear": "Снять выбор",
+    "download": "Скачать"
   }
 }

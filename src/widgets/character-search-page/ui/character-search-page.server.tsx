@@ -5,6 +5,7 @@ import { Button, Card, Input } from '@/shared/ui';
 import { PaginationLinks } from '@/features/pagination/ui/pagination-links';
 import type { CharacterSearchParams } from '@/features/search/model/search-params';
 import { CharacterListServer } from '@/widgets/character-list/ui/character-list.server';
+import { SelectedItemsFlyout } from '@/widgets/selected-items-flyout';
 
 type CharacterSearchPageServerProps = {
   searchParams: CharacterSearchParams;
@@ -67,6 +68,7 @@ export async function CharacterSearchPageServer({
                     page={page}
                     search={search}
                     emptyMessage={t('empty')}
+                    selectionLabel={(name) => t('selectCharacter', { name })}
                   />
 
                   {data.results.length > 0 && (
@@ -99,6 +101,8 @@ export async function CharacterSearchPageServer({
               </aside>
             )}
           </div>
+
+          <SelectedItemsFlyout />
         </div>
       </div>
     </main>
