@@ -6,6 +6,7 @@ import { PaginationLinks } from '@/features/pagination/ui/pagination-links';
 import type { CharacterSearchParams } from '@/features/search/model/search-params';
 import { CharacterListServer } from '@/widgets/character-list/ui/character-list.server';
 import { SelectedItemsFlyout } from '@/widgets/selected-items-flyout';
+import { cn } from '@/shared/lib/cn';
 
 type CharacterSearchPageServerProps = {
   searchParams: CharacterSearchParams;
@@ -20,6 +21,7 @@ export async function CharacterSearchPageServer({
 }: CharacterSearchPageServerProps) {
   const t = await getTranslations('characters');
   const { page, search } = searchParams;
+  const hasDetailsPanel = Boolean(detailsPanel);
 
   let data: PeopleResponse | null = null;
   let failed = false;
@@ -57,7 +59,13 @@ export async function CharacterSearchPageServer({
             </form>
           </Card>
 
-          <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_320px] md:items-start xl:grid-cols-[minmax(0,1fr)_360px]">
+          <div
+            className={cn(
+              'grid gap-6',
+              hasDetailsPanel &&
+                'md:grid-cols-[minmax(0,1fr)_320px] md:items-start xl:grid-cols-[minmax(0,1fr)_360px]'
+            )}
+          >
             <Card className="p-6">
               {failed && <div className="text-destructive">{t('error')}</div>}
 
@@ -69,6 +77,7 @@ export async function CharacterSearchPageServer({
                     search={search}
                     emptyMessage={t('empty')}
                     selectionLabel={(name) => t('selectCharacter', { name })}
+                    compact={hasDetailsPanel}
                   />
 
                   {data.results.length > 0 && (
@@ -85,21 +94,7 @@ export async function CharacterSearchPageServer({
               )}
             </Card>
 
-            {detailsPanel ?? (
-              <aside className="md:sticky md:top-24">
-                <Card className="p-6">
-                  <p className="text-xs font-medium uppercase text-muted-foreground">
-                    {t('detailsEyebrow')}
-                  </p>
-                  <h2 className="mt-2 text-subheading font-heading text-card-foreground">
-                    {t('detailsTitle')}
-                  </h2>
-                  <p className="mt-4 text-body-sm text-muted-foreground">
-                    {t('detailsDescription')}
-                  </p>
-                </Card>
-              </aside>
-            )}
+            {detailsPanel}
           </div>
 
           <SelectedItemsFlyout />

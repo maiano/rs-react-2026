@@ -3,6 +3,7 @@ import { Link } from '@/i18n/navigation';
 import { Card } from '@/shared/ui';
 import { formatBirthYear } from '@/shared/lib/format/format-birth-year';
 import { getCharactersRoute } from '@/shared/lib/routes/character-routes';
+import { CloseDetailsOnEscape } from './close-details-on-escape';
 
 type DetailLabel = {
   name: string;
@@ -49,8 +50,11 @@ export function CharacterDetailsPanelServer({
   title,
   labels,
 }: CharacterDetailsPanelServerProps) {
+  const closeHref = getCharactersRoute(page, search);
+
   return (
     <aside className="md:sticky md:top-24">
+      <CloseDetailsOnEscape href={closeHref} />
       <Card className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -62,7 +66,7 @@ export function CharacterDetailsPanelServer({
           </div>
 
           <Link
-            href={getCharactersRoute(page, search)}
+            href={closeHref}
             className="inline-flex h-8 items-center justify-center rounded-xl border border-border bg-secondary px-3 text-xs font-medium text-secondary-foreground shadow-sm transition-all duration-200 hover:border-primary/35 hover:bg-[color-mix(in_oklch,var(--secondary)_72%,var(--primary)_28%)] hover:text-foreground hover:shadow-sm focus:outline-none focus-visible:ring-4 focus-visible:ring-ring/15"
           >
             {labels.close}

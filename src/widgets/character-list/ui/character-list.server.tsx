@@ -4,6 +4,7 @@ import { CharacterCard } from '@/entities/character/ui/character-card';
 import { CharacterSelectionControl } from '@/entities/character/ui/character-selection-control';
 import { toSelectedItem } from '@/entities/character/model/selection.helpers';
 import { getCharacterDetailsRoute } from '@/shared/lib/routes/character-routes';
+import { cn } from '@/shared/lib/cn';
 
 type CharacterListServerProps = {
   items: Person[];
@@ -11,6 +12,7 @@ type CharacterListServerProps = {
   search: string;
   emptyMessage: string;
   selectionLabel: (name: string) => string;
+  compact?: boolean;
 };
 
 export function CharacterListServer({
@@ -19,13 +21,19 @@ export function CharacterListServer({
   search,
   emptyMessage,
   selectionLabel,
+  compact = false,
 }: CharacterListServerProps) {
   if (items.length === 0) {
     return <div className="text-muted-foreground">{emptyMessage}</div>;
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+    <div
+      className={cn(
+        'grid gap-4',
+        compact ? 'md:grid-cols-1 lg:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-3'
+      )}
+    >
       {items.map((item) => (
         <div
           key={item.entityId}
