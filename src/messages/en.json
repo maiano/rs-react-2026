@@ -1,0 +1,68 @@
+{
+  "metadata": {
+    "title": "Galactic Archive",
+    "description": "Star Wars character search application"
+  },
+  "migration": {
+    "title": "Galactic Archive"
+  },
+  "header": {
+    "brand": "Galactic Archive",
+    "search": "Search",
+    "about": "About",
+    "api": "Star Wars API",
+    "switchToLightTheme": "Switch to light theme",
+    "switchToDarkTheme": "Switch to dark theme"
+  },
+  "about": {
+    "eyebrow": "About",
+    "title": "Star Wars Character Search",
+    "author": "Author: maiano",
+    "description": "This project is built for the RS School React course.",
+    "courseLink": "RS School React Course"
+  },
+  "notFound": {
+    "eyebrow": "Error 404",
+    "title": "Page not found",
+    "description": "The route you requested does not exist or is still under construction.",
+    "backToSearch": "Back to Search"
+  },
+  "characters": {
+    "eyebrow": "Star Wars Database",
+    "title": "Find characters across the galaxy",
+    "searchPlaceholder": "Search characters...",
+    "searchButton": "Search",
+    "empty": "No results found",
+    "error": "Failed to load characters.",
+    "selectCharacter": "Select {name}",
+    "detailsEyebrow": "Details",
+    "detailsTitle": "Select a character",
+    "detailsDescription": "Choose a character from the list to view details.",
+    "detailLabels": {
+      "name": "Name",
+      "gender": "Gender",
+      "birthYear": "Birth year",
+      "homeworld": "Homeworld",
+      "height": "Height",
+      "mass": "Mass",
+      "alignment": "Alignment",
+      "forceUser": "Force user",
+      "jedi": "Jedi",
+      "sith": "Sith",
+      "faction": "Faction",
+      "films": "Films",
+      "species": "Species",
+      "vehicles": "Vehicles",
+      "starships": "Starships",
+      "unknown": "Unknown",
+      "yes": "Yes",
+      "no": "No",
+      "close": "Close"
+    }
+  },
+  "selection": {
+    "selectedCount": "Selected characters",
+    "clear": "Unselect all",
+    "download": "Download"
+  }
+}

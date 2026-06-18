@@ -1,11 +1,25 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { ReactNode } from 'react';
+import { NextIntlClientProvider } from 'next-intl';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { SelectedItemsFlyout } from './selected-items-flyout';
 import { render, screen, userEvent } from '@/test/test-utils';
 import { useSelectionStore } from '@/entities/character/model/selection.store';
 
-vi.mock('@/shared/lib/csv/download-selected-items', () => ({
-  downloadSelectedItems: vi.fn(),
-}));
+const messages = {
+  selection: {
+    selectedCount: 'Selected characters',
+    clear: 'Unselect all',
+    download: 'Download',
+  },
+};
+
+function IntlWrapper({ children }: { children: ReactNode }) {
+  return (
+    <NextIntlClientProvider locale="en" messages={messages}>
+      {children}
+    </NextIntlClientProvider>
+  );
+}
 
 describe('SelectedItemsFlyout', () => {
   beforeEach(() => {
@@ -13,7 +27,7 @@ describe('SelectedItemsFlyout', () => {
   });
 
   it('does not render when nothing is selected', () => {
-    const { container } = render(<SelectedItemsFlyout />);
+    const { container } = render(<SelectedItemsFlyout />, { wrapper: IntlWrapper });
 
     expect(container).toBeEmptyDOMElement();
   });
@@ -37,9 +51,11 @@ describe('SelectedItemsFlyout', () => {
       },
     });
 
-    render(<SelectedItemsFlyout />);
+    render(<SelectedItemsFlyout />, { wrapper: IntlWrapper });
 
     expect(screen.getByText(/Selected characters:/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Download' })).toHaveAttribute('type', 'submit');
+    expect(screen.getByDisplayValue(/luke-skywalker/)).toHaveAttribute('name', 'items');
 
     await user.click(screen.getByRole('button', { name: 'Unselect all' }));
 

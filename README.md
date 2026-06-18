@@ -1,22 +1,36 @@
-# Star Wars Character Search
+# Galactic Archive
 
-This is a React + TypeScript app for exploring Star Wars characters. It supports search with `localStorage` persistence, URL-synced pagination, a split-view character details panel, an About page, and a custom 404 page.
+Next.js + TypeScript application for searching Star Wars characters.
 
-The current version is implemented with functional components, hooks, and React Router.
+The app was migrated from a Vite/React Router SPA to **Next.js App Router**. The main search page and character details are rendered on the server, while small interactive parts like theme switching, language switching, item selection, and CSV download controls stay on the client.
 
-## Live Demo
+## What Is Implemented
 
-https://sw-maiano.netlify.app/
+- Next.js App Router with localized routes
+- `next-intl` internationalization: English and Russian
+- Shared layout with header, theme switcher, and language switcher
+- Server-rendered character search results
+- Server-rendered character details panel at `/[locale]/characters/[detailsId]`
+- Static About page at `/[locale]/about`
+- Localized 404 page
+- Selected character state with Zustand
+- Server-side CSV generation via `/api/selected-items/csv`
+- Tailwind CSS v4 through PostCSS
+
+## Routes
+
+```text
+/en
+/ru
+/en/characters?page=1
+/en/characters/[detailsId]?page=1
+/en/about
+/api/selected-items/csv
+```
+
+`/` redirects to the default locale.
 
 ## Getting Started
-
-Clone the repository and switch to the working branch:
-
-```bash
-git clone https://github.com/maiano/rs-react-2026.git
-cd rs-react-2026
-git checkout hooks-and-routing
-```
 
 Install dependencies:
 
@@ -30,42 +44,41 @@ Start the development server:
 npm run dev
 ```
 
-Open the app in your browser:
+Open:
 
 ```text
-http://localhost:5173
+http://localhost:3000
 ```
-
-## Features
-
-- Search characters with persisted search term
-- URL-based pagination
-- Master-detail layout with nested routing
-- About page with author and course link
-- 404 page for unknown routes
 
 ## Checks
 
-Run tests:
+Type-check:
 
 ```bash
-npm run test
+npx tsc --noEmit
 ```
 
-Run coverage:
-
-```bash
-npm run test:coverage
-```
-
-Run ESLint:
+Lint:
 
 ```bash
 npm run lint
 ```
 
-Build the project:
+Run tests:
+
+```bash
+npm test
+```
+
+Build:
 
 ```bash
 npm run build
 ```
+
+## Notes For Reviewers
+
+- API data is not translated; only UI and navigation text are localized.
+- Character search and details use server-side `fetch` with `cache: 'no-store'`.
+- The About page is statically generated.
+- CSV content is compiled on the server.

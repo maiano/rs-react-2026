@@ -1,1 +1,1 @@
-export { CharacterList } from './ui/character-list';
+export { CharacterListServer } from './ui/character-list.server';
