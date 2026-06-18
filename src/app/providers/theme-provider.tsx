@@ -27,10 +27,22 @@ type Props = {
 };
 
 export function ThemeProvider({ children }: Props) {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  const [theme, setTheme] = useState<Theme>('light');
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    const timeoutId = window.setTimeout(() => {
+      setTheme(getInitialTheme());
+      setHydrated(true);
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
 
     const root = document.documentElement;
 
@@ -41,7 +53,7 @@ export function ThemeProvider({ children }: Props) {
     }
 
     localStorage.setItem(STORAGE_KEY, theme);
-  }, [theme]);
+  }, [hydrated, theme]);
 
   const value = useMemo(() => ({ theme, setTheme }), [theme]);
 
