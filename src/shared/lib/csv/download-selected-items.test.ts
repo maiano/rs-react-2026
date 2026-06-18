@@ -1,5 +1,5 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { downloadSelectedItems } from './download-selected-items';
+import { describe, expect, it } from 'vitest';
+import { createSelectedItemsCsv } from './create-selected-items-csv';
 import type { SelectedItem } from '@/entities/character/model/selection.store';
 
 const selectedItems: SelectedItem[] = [
@@ -27,52 +27,14 @@ const selectedItems: SelectedItem[] = [
   },
 ];
 
-describe('downloadSelectedItems', () => {
-  const originalCreateObjectUrl = URL.createObjectURL;
-  const originalRevokeObjectUrl = URL.revokeObjectURL;
+describe('createSelectedItemsCsv', () => {
+  it('creates csv content with useful fields', () => {
+    const csv = createSelectedItemsCsv(selectedItems);
 
-  afterEach(() => {
-    URL.createObjectURL = originalCreateObjectUrl;
-    URL.revokeObjectURL = originalRevokeObjectUrl;
-    vi.restoreAllMocks();
-  });
-
-  it('creates a csv download with useful fields and count in the filename', async () => {
-    const createObjectURL = vi.fn((blob: Blob) => {
-      expect(blob).toBeInstanceOf(Blob);
-      return 'blob:test-url';
-    });
-    const revokeObjectURL = vi.fn();
-    const link = document.createElement('a');
-    const click = vi.fn();
-
-    link.click = click;
-    URL.createObjectURL = createObjectURL;
-    URL.revokeObjectURL = revokeObjectURL;
-
-    const createElementSpy = vi.spyOn(document, 'createElement').mockReturnValue(link);
-
-    downloadSelectedItems(selectedItems);
-
-    expect(createElementSpy).toHaveBeenCalledWith('a');
-    expect(createObjectURL).toHaveBeenCalledTimes(1);
-    expect(link.href).toBe('blob:test-url');
-    expect(link.download).toBe('2_items.csv');
-    expect(click).toHaveBeenCalledTimes(1);
-    expect(revokeObjectURL).toHaveBeenCalledWith('blob:test-url');
-
-    const blob = createObjectURL.mock.calls[0]?.[0];
-
-    expect(blob).toBeDefined();
-
-    if (!blob) {
-      throw new Error('Expected CSV blob to be created');
-    }
-
-    await expect(blob.text()).resolves.toContain('"Luke ""Red Five"" Skywalker"');
-    await expect(blob.text()).resolves.toContain('"Unknown"');
-    await expect(blob.text()).resolves.toContain('"Yes"');
-    await expect(blob.text()).resolves.toContain('"No"');
-    await expect(blob.text()).resolves.toContain('"details_url"');
+    expect(csv).toContain('"Luke ""Red Five"" Skywalker"');
+    expect(csv).toContain('"Unknown"');
+    expect(csv).toContain('"Yes"');
+    expect(csv).toContain('"No"');
+    expect(csv).toContain('"details_url"');
   });
 });

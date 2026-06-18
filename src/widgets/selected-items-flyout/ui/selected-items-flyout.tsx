@@ -2,7 +2,6 @@
 
 import { useTranslations } from 'next-intl';
 import { Button, Card } from '@/shared/ui';
-import { downloadSelectedItems } from '@/shared/lib/csv/download-selected-items';
 import {
   useClearSelection,
   useSelectedCount,
@@ -13,6 +12,7 @@ export function SelectedItemsFlyout() {
   const t = useTranslations('selection');
   const count = useSelectedCount();
   const items = useSelectedItems();
+  const serializedItems = JSON.stringify(items);
   const clear = useClearSelection();
 
   if (count === 0) {
@@ -32,9 +32,12 @@ export function SelectedItemsFlyout() {
               {t('clear')}
             </Button>
 
-            <Button size="sm" onClick={() => downloadSelectedItems(items)}>
-              {t('download')}
-            </Button>
+            <form action="/api/selected-items/csv" method="post">
+              <input type="hidden" name="items" value={serializedItems} />
+              <Button type="submit" size="sm">
+                {t('download')}
+              </Button>
+            </form>
           </div>
         </div>
       </Card>

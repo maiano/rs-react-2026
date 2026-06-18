@@ -4,7 +4,7 @@ function escapeCsvValue(value: string) {
   return `"${value.replaceAll('"', '""')}"`;
 }
 
-export function downloadSelectedItems(items: SelectedItem[]) {
+export function createSelectedItemsCsv(items: SelectedItem[]) {
   const header = [
     'id',
     'slug',
@@ -29,17 +29,7 @@ export function downloadSelectedItems(items: SelectedItem[]) {
     item.detailsUrl,
   ]);
 
-  const csv = [header, ...rows]
+  return [header, ...rows]
     .map((row) => row.map((value) => escapeCsvValue(value)).join(','))
     .join('\n');
-
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-
-  link.href = url;
-  link.download = `${items.length}_items.csv`;
-  link.click();
-
-  URL.revokeObjectURL(url);
 }
