@@ -1,1 +1,1 @@
-export { CharacterDetailsPanel } from './ui/character-details-panel';
+export { CharacterDetailsPanelServer } from './ui/character-details-panel.server';
